@@ -21,6 +21,7 @@ import * as ErrorUtils from '../ErrorUtils';
 import * as UserUtils from '../UserUtils';
 import * as Report from './Report';
 import * as NumberUtils from '../NumberUtils';
+import * as LocalePhoneNumber from '../LocalePhoneNumber';
 
 let allReports;
 Onyx.connect({
@@ -452,14 +453,13 @@ function getMoneyRequestInformation(
     } else {
         reportPreviewAction = ReportUtils.buildOptimisticReportPreview(chatReport, iouReport, comment, optimisticTransaction);
     }
-
     // Add optimistic personal details for participant
     const optimisticPersonalDetailListAction = isNewChatReport
         ? {
               [payerAccountID]: {
                   accountID: payerAccountID,
                   avatar: UserUtils.getDefaultAvatarURL(payerAccountID),
-                  displayName: participant.displayName || participant.login,
+                  displayName: LocalePhoneNumber.formatPhoneNumber(participant.displayName || participant.login),
                   login: payerEmail,
               },
           }
@@ -846,7 +846,7 @@ function createSplitsAndOnyxData(participants, currentUserLogin, currentUserAcco
                   [accountID]: {
                       accountID,
                       avatar: UserUtils.getDefaultAvatarURL(accountID),
-                      displayName: participant.displayName || participant.login,
+                      displayName: LocalePhoneNumber.formatPhoneNumber(participant.displayName || participant.login),
                       login: email,
                   },
               }
